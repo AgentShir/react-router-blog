@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
-import logo from './logo.svg';
-import './styles/App.css';
-
-import CreatePost from './components/CreatePost';
-import ShowPost from './components/ShowPost';
-import PostList from './components/PostList';
-import BaseLayout from './components/BaseLayout';
-
-
+import '../styles/App.css';
+import CreatePost from '../components/CreatePost';
+import ShowPost from '../components/ShowPost';
+import PostList from '../components/PostList';
+import BaseLayout from '../components/BaseLayout';
 
 class App extends Component {
   render() {
@@ -23,7 +19,7 @@ class App extends Component {
           </Switch>
         </BaseLayout>
       </BrowserRouter>
-    );
+    )
   }
 }
 
