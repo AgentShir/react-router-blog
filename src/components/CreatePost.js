@@ -1,54 +1,73 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 class CreatePost extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+
     this.state = {
-      authorName: '',
-      blogTitle: '',
-      blogPost: ''
+      name: '',
+      title: '',
+      blog: ''
     }
 
-    this.handleChange = (e) => {
-      this.setState({
-        [e.target.authorName]: e.target.value,
-        [e.target.blogTitle]: e.target.value,
-        [e.target.blogPost]: e.target.value
-      })
-    }
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleBlogChange = this.handleBlogChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-    this.handleSubmit = (e) => {
-      this.setState ({
-        TODOfixthis: this.state.blogTitle + this.state.authorName + this.state.blogPost
-      })
-    }
+  handleNameChange = (event) => {
+    this.setState({name: event.target.value});
+  };
 
-    return (
+  handleTitleChange = (event) => {
+    this.setState({title: event.target.value});
+  };
+
+  handleBlogChange = (event) => {
+    this.setState({blog: event.target.value});
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    let listItem = JSON.stringify(this.state);
+
+    fetch('https://tiny-lasagna-server.herokuapp.com/collections/blogger/', {
+      method: "POST",
+      body: listItem,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => this.props.history.push('/'))
+
+    .catch(error => console.log('Booo'));
+
+    this.setState({name:'', title:'', blog:''});
+  }
+
+  render() {
+    return(
       <div className="container">
-        <form>
-          <div className="form-group row">
-            <label for="authorName" className="col-2 col-form-label">Author Name</label>
-              <div className="col-10">
-                <input onChange={this.handleChange} value={this.state.authorName} className="form-control" type="text" value="Enter your name or email address..." id="authorName" />
-                <small id="authorName" className="form-text text-muted">"You can use a pen name if you'd like!"</small>
-              </div>
-          </div>
-          <div className="form-group row">
-            <label for="blogTitle" className="col-2 col-form-label">Title</label>
-              <div className="col-10">
-                <input onChange={this.handleChange} value={this.state.blogTitle} className="form-control" type="text" value="Title" id="blogTitle" />
-              </div>
+        <form onSubmit={this.handleSubmit} className="container">
+          <div className="form-group">
+            <label htmlFor="name">Author:</label>
+            <input className="form-control" name="name" type="text" value={this.state.name}onChange={this.handleNameChange} />
           </div>
           <div className="form-group">
-            <label for="blogPost">Write your blog...</label>
-              <textarea onChange={this.handleChange} value={this.state.blogPost} className="form-control" id="blogPost" rows="3"></textarea>
+            <label htmlFor="title">Title:</label>
+            <input className="form-control" name="title" type="text" value={this.state.title}onChange={this.handleTitleChange} />
           </div>
-            <button type="button" className="btn btn-primary" onCLick={this}>Submit</button>
+          <div className="form-group">
+            <label htmlFor="blog">Write your blog...</label>
+            <textarea className="form-control" rows="10" name="blog" type="text" value={this.state.blog}onChange={this.handleBlogChange} />
+          </div>
+            <button type="submit" className="btn btn-primary form-control" href="/">Submit</button>
         </form>
-          <p>{this.state.authorName}</p>
       </div>
-    );
+    )
   }
 }
-
 
 export default CreatePost;
